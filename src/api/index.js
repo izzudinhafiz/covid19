@@ -1,52 +1,74 @@
 import axios from "axios";
 
-const url = "https://covid19.mathdro.id/api";
+const globalUrl = "https://covidapi.info/api/v1/global";
+const countryUrl = "https://covidapi.info/api/v1";
 
-export const fetchData = async (country) => {
-  let dynamicURL = url;
+export const fetchTotalData = async (country) => {
+  if (country) {
+    // Download individual country data
+    try {
+      const {
+        data: { result },
+      } = await axios.get(`${countryUrl}/country/${country}/latest`);
 
-  if (country !== "Global" && country) {
-    dynamicURL = `${url}/countries/${country}`;
+      const lastUpdate = Object.keys(result)[0];
+      const { confirmed, deaths, recovered } = result[lastUpdate];
+
+      return { confirmed, recovered, deaths, lastUpdate };
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    try {
+      //download global total data
+      const {
+        data: {
+          date,
+          result: { confirmed, deaths, recovered },
+        },
+      } = await axios.get(globalUrl);
+      const lastUpdate = date;
+
+      return { confirmed, recovered, deaths, lastUpdate };
+    } catch (error) {
+      console.log(error);
+    }
   }
-
-  try {
-    // const { data } = await axios.get(url);
-
-    // const modifiedData = {
-    //   confirmed: data.confirmed,
-    //   recovered: data.recovered,
-    //   deaths: data.deaths,
-    //   lastUpdate: data.lastUpdate,
-    // };
-    // return modifiedData;
-
-    const {
-      data: { confirmed, recovered, deaths, lastUpdate },
-    } = await axios.get(dynamicURL);
-
-    return { confirmed, recovered, deaths, lastUpdate };
-  } catch (error) {}
 };
 
-export const fetchDailyData = async () => {
+export const fetchDailyData = async (country) => {
   try {
-    const { data } = await axios.get(`${url}/daily`);
-    const modifiedData = data.map((data) => ({
-      confirmed: data.confirmed.total,
-      deaths: data.deaths.total,
-      date: data.reportDate,
-    }));
-    return modifiedData;
-  } catch (error) {}
+    let fetchURL;
+
+    if (country) {
+      fetchURL = `${countryUrl}/country/${country}`;
+    } else {
+      fetchURL = `${globalUrl}/count`;
+    }
+    const {
+      data: { result },
+    } = await axios.get(fetchURL);
+
+    const modifiedData = Object.keys(result).map(function (key, index) {
+      const { confirmed, deaths, recovered } = result[key];
+      return confirmed ? { confirmed, deaths, recovered, date: key } : null;
+    });
+
+    return modifiedData.filter((data) => data);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const fetchCountryData = async () => {
   try {
     const {
       data: { countries },
-    } = await axios.get(`${url}/countries`);
+    } = await axios.get("https://covid19.mathdro.id/api/countries");
 
-    const modifiedData = countries.map((country) => country.name);
+    const modifiedData = countries.map((country) => {
+      return { country: country.name, iso: country.iso3 };
+    });
 
     return modifiedData;
   } catch (error) {}

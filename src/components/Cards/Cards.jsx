@@ -19,9 +19,9 @@ const Cards = ({ data: { confirmed, recovered, deaths, lastUpdate } }) => {
     displayData.deaths = 0;
     displayData.lastUpdate = new Date().toDateString();
   } else {
-    displayData.confirmed = confirmed.value;
-    displayData.recovered = recovered.value;
-    displayData.deaths = deaths.value;
+    displayData.confirmed = confirmed;
+    displayData.recovered = recovered;
+    displayData.deaths = deaths;
     displayData.lastUpdate = new Date(lastUpdate).toDateString();
   }
 
