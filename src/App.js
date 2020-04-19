@@ -2,31 +2,33 @@ import React from "react";
 
 import { Cards, Chart, CountryPicker } from "./components";
 import styles from "./App.module.css";
-import { fetchData } from "./api";
+import { fetchTotalData, fetchDailyData } from "./api";
 
 class App extends React.Component {
   state = {
-    data: {},
+    latestData: {},
+    timeSeriesData: [],
     country: "",
   };
 
   async componentDidMount() {
-    const fetchedData = await fetchData();
-    this.setState({ data: fetchedData });
+    const fetchedTotalData = await fetchTotalData();
+    const fetchedTimeSeries = await fetchDailyData(this.state.country);
+    this.setState({ latestData: fetchedTotalData, timeSeriesData: fetchedTimeSeries });
   }
 
   handleCountryChange = async (country) => {
-    const fetchedData = await fetchData(country);
-    console.log(fetchedData);
-    this.setState({ data: fetchedData, country: country });
+    const fetchedTotalData = await fetchTotalData(country);
+    const fetchedTimeSeries = await fetchDailyData(country);
+    this.setState({ latestData: fetchedTotalData, country: country, timeSeriesData: fetchedTimeSeries });
   };
 
   render() {
     return (
       <div className={styles.container}>
-        <Cards data={this.state.data} />
+        <Cards data={this.state.latestData} />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
-        <Chart data={this.state.data} country={this.state.country} />
+        <Chart data={this.state.timeSeriesData} country={this.state.country} />
       </div>
     );
   }
