@@ -17,3 +17,25 @@
 .deaths {
   border-bottom: 10px solid rgba(255, 0, 0, 0.5);
 }
+
+.counter {
+  display: flex;
+  align-items: baseline;
+}
+
+.confirmedDelta {
+  margin-left: 10px !important;
+  margin-bottom: 0 !important;
+  color: #e30910;
+}
+
+.recoveredDelta {
+  margin-left: 10px !important;
+  margin-bottom: 0 !important;
+  color: #32a862;
+}
+.deathsDelta {
+  margin-left: 10px !important;
+  margin-bottom: 0 !important;
+  color: #e30910;
+}

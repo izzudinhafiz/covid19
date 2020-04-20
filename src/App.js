@@ -8,7 +8,7 @@ class App extends React.Component {
   state = {
     latestData: {},
     timeSeriesData: [],
-    country: "",
+    country: ""
   };
 
   async componentDidMount() {
@@ -26,9 +26,10 @@ class App extends React.Component {
   render() {
     return (
       <div className={styles.container}>
-        <Cards data={this.state.latestData} />
+        <Cards data={this.state.latestData} timeSeries={this.state.timeSeriesData} />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Chart data={this.state.timeSeriesData} country={this.state.country} />
+        <div style={{ paddingTop: 20 }}>Source: Johns Hopkins University, Center for Systems Science and Engineering (via covidapi.info)</div>
       </div>
     );
   }

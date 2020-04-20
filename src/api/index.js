@@ -8,7 +8,7 @@ export const fetchTotalData = async (country) => {
     // Download individual country data
     try {
       const {
-        data: { result },
+        data: { result }
       } = await axios.get(`${countryUrl}/country/${country}/latest`);
 
       const lastUpdate = Object.keys(result)[0];
@@ -20,12 +20,12 @@ export const fetchTotalData = async (country) => {
     }
   } else {
     try {
-      //download global total data
+      //download global total data from API
       const {
         data: {
           date,
-          result: { confirmed, deaths, recovered },
-        },
+          result: { confirmed, deaths, recovered }
+        }
       } = await axios.get(globalUrl);
       const lastUpdate = date;
 
@@ -46,7 +46,7 @@ export const fetchDailyData = async (country) => {
       fetchURL = `${globalUrl}/count`;
     }
     const {
-      data: { result },
+      data: { result }
     } = await axios.get(fetchURL);
 
     const modifiedData = Object.keys(result).map(function (key, index) {
@@ -63,7 +63,7 @@ export const fetchDailyData = async (country) => {
 export const fetchCountryData = async () => {
   try {
     const {
-      data: { countries },
+      data: { countries }
     } = await axios.get("https://covid19.mathdro.id/api/countries");
 
     const modifiedData = countries.map((country) => {
