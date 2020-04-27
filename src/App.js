@@ -29,7 +29,9 @@ class App extends React.Component {
         <Cards data={this.state.latestData} timeSeries={this.state.timeSeriesData} />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Chart data={this.state.timeSeriesData} country={this.state.country} />
-        <div style={{ paddingTop: 20 }}>Source: Johns Hopkins University, Center for Systems Science and Engineering (via covidapi.info)</div>
+        <div style={{ paddingTop: 20, textAlign: "center" }}>
+          Source: Johns Hopkins University, Center for Systems Science and Engineering (via covidapi.info)
+        </div>
       </div>
     );
   }

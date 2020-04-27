@@ -1,61 +1,110 @@
 import React from "react";
-
-import { Line, Bar } from "react-chartjs-2";
+import { Chart as Chartjs } from "chart.js";
 
 import styles from "./Chart.module.css";
 
-const Chart = ({ data, country }) => {
-  const dailyData = data;
+class Chart extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      windowWidth: window.innerWidth
+    };
+  }
 
-  const lineChart = dailyData.length ? (
-    <Line
-      data={{
-        labels: dailyData.map(({ date }) => date),
+  chartRef = React.createRef();
+
+  componentDidMount() {
+    window.addEventListener("resize", () => {
+      this.setState({ windowWidth: window.innerWidth });
+    });
+    const dailyData = this.props.data;
+
+    this.myChart = new Chartjs(this.chartRef.current, {
+      type: "line",
+      data: {
+        labels: dailyData.map(({ date }) => {
+          return new Date();
+        }),
         datasets: [
           {
             data: dailyData.map(({ confirmed }) => confirmed),
             label: "Infected",
             borderColor: "#3333ff",
-            fill: true,
+            fill: true
           },
           {
             data: dailyData.map(({ recovered }) => recovered),
             label: "Recovered",
             borderColor: "green",
             backgroundColor: "rgba(0, 255, 0, 0.5)",
-            fill: true,
+            fill: true
           },
           {
             data: dailyData.map(({ deaths }) => deaths),
             label: "Deaths",
             borderColor: "red",
             backgroundColor: "rgba(255, 0, 0, 0.5)",
-            fill: true,
-          },
-        ],
-      }}
-    />
-  ) : null;
+            fill: true
+          }
+        ]
+      },
+      options: {
+        scales: {
+          xAxes: [
+            {
+              type: "time",
+              time: {
+                displayFormats: {
+                  day: "MMM DD"
+                },
+                stepSize: 7
+              }
+            }
+          ],
+          yAxes: [
+            {
+              ticks: {
+                callback: (value, index, values) => {
+                  const units = ["k", "M", "B", "T"];
+                  const order = Math.floor(Math.log(values[0]) / Math.log(1000));
 
-  const barChart = data.confirmed ? (
-    <Bar
-      data={{
-        labels: ["Infected", "Recovered", "Deaths"],
-        datasets: [
-          {
-            label: "People",
-            backgroundColor: ["rgba(0, 0, 255, 0.5)", "rgba(0, 255, 0, 0.5)", "rgba(255, 0, 0, 0.5)"],
-            data: [data.confirmed, data.recovered, data.deaths],
-          },
-        ],
-      }}
-      options={{
-        legend: { display: false, title: { display: true, text: `Current State in ${country}` } },
-      }}
-    />
-  ) : null;
+                  if (order > 0) {
+                    const unitName = units[order - 1];
+                    return value / 1000 ** order + unitName;
+                  } else {
+                    return value;
+                  }
+                },
+                fontSize: 12
+              }
+            }
+          ]
+        }
+      }
+    });
+  }
 
-  return <div className={styles.container}>{lineChart}</div>;
-};
+  componentDidUpdate() {
+    const dailyData = this.props.data;
+    this.myChart.data.labels = dailyData.map(({ date }) => {
+      return new Date(date);
+    });
+    this.myChart.data.datasets[0].data = dailyData.map(({ confirmed }) => confirmed);
+    this.myChart.data.datasets[1].data = dailyData.map(({ recovered }) => recovered);
+    this.myChart.data.datasets[2].data = dailyData.map(({ deaths }) => deaths);
+
+    this.myChart.options.scales.yAxes[0].ticks.fontSize = this.state.windowWidth >= 400 ? 12 : 10;
+    // this.myChart.options.scales.yAxes = [yAxesOptions];
+    this.myChart.update();
+  }
+
+  render() {
+    return (
+      <div className={styles.container}>
+        <canvas id="myChart" ref={this.chartRef}></canvas>
+      </div>
+    );
+  }
+}
 
 export default Chart;

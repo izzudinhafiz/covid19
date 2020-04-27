@@ -19,8 +19,8 @@ export const fetchTotalData = async (country) => {
       console.log(error);
     }
   } else {
+    //download global total data from API
     try {
-      //download global total data from API
       const {
         data: {
           date,
