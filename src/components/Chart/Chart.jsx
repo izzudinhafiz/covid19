@@ -93,8 +93,13 @@ class Chart extends React.Component {
     this.myChart.data.datasets[1].data = dailyData.map(({ recovered }) => recovered);
     this.myChart.data.datasets[2].data = dailyData.map(({ deaths }) => deaths);
 
-    this.myChart.options.scales.yAxes[0].ticks.fontSize = this.state.windowWidth >= 400 ? 12 : 10;
-    // this.myChart.options.scales.yAxes = [yAxesOptions];
+    if (this.state.windowWidth <= 500) {
+      this.myChart.options.scales.yAxes[0].ticks.fontSize = 10;
+      this.myChart.options.maintainAspectRatio = false;
+    } else {
+      this.myChart.options.scales.yAxes[0].ticks.fontSize = 12;
+      this.myChart.options.maintainAspectRatio = true;
+    }
     this.myChart.update();
   }
 
