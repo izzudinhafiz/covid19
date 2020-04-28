@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FormControl, NativeSelect } from "@material-ui/core";
+import { FormControl, NativeSelect, Grid, Button } from "@material-ui/core";
 
-import { fetchCountryData } from "../../api";
+import { fetchCountryData, fetchLocation } from "../../api";
 import styles from "./CountryPicker.module.css";
 
 const CountryPicker = ({ handleCountryChange }) => {
@@ -15,19 +15,47 @@ const CountryPicker = ({ handleCountryChange }) => {
     fetchCountries();
   }, []);
 
+  const handleClick = async () => {
+    const selectElement = document.getElementById("country-select");
+    const buttonElement = document.getElementById("button-location");
+
+    if (buttonElement.innerText !== "GLOBAL") {
+      const countryClick = await fetchLocation();
+      const index = countries.map((country) => country.iso2).indexOf(countryClick);
+      if (index !== -1) {
+        selectElement.value = countries[index].iso3;
+        buttonElement.innerText = "Global";
+      }
+    } else {
+      buttonElement.innerText = "My Country";
+      selectElement.value = "";
+    }
+
+    handleCountryChange(selectElement.value);
+  };
+
   return (
-    <FormControl className={styles.formControl}>
-      <NativeSelect defaultValue="" onChange={(e) => handleCountryChange(e.target.value)}>
-        <option value="">Global</option>
-        {countries
-          ? countries.map((country) => (
-              <option key={country.country} value={country.iso}>
-                {country.country}
-              </option>
-            ))
-          : null}
-      </NativeSelect>
-    </FormControl>
+    <Grid container spacing={1} className={styles.gridContainer}>
+      <Grid item>
+        <FormControl className={styles.formControl}>
+          <NativeSelect id="country-select" defaultValue="" onChange={(e) => handleCountryChange(e.target.value)}>
+            <option value="">Global</option>
+            {countries
+              ? countries.map((country) => (
+                  <option key={country.name} value={country.iso3}>
+                    {country.name}
+                  </option>
+                ))
+              : null}
+          </NativeSelect>
+        </FormControl>
+      </Grid>
+      <Grid item>
+        <Button id="button-location" variant="contained" size="small" disableElevation color="primary" onClick={handleClick}>
+          My Country
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

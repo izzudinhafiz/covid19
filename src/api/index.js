@@ -63,13 +63,61 @@ export const fetchDailyData = async (country) => {
 export const fetchCountryData = async () => {
   try {
     const {
-      data: { countries }
-    } = await axios.get("https://covid19.mathdro.id/api/countries");
+      data: { result }
+    } = await axios.get(`${globalUrl}/latest`);
+    const iso3 = result.map((result) => Object.keys(result)[0]);
 
-    const modifiedData = countries.map((country) => {
-      return { country: country.name, iso: country.iso3 };
+    let searchString = "https://restcountries.eu/rest/v2/alpha?codes=";
+    iso3.forEach((country) => {
+      searchString = searchString.concat(country, ";");
     });
 
-    return modifiedData;
-  } catch (error) {}
+    let { data: countries } = await axios.get(searchString);
+    countries = countries.filter((country) => country);
+
+    const modifiedData = countries.map((country) => {
+      return { name: country.name, iso3: country.alpha3Code, iso2: country.alpha2Code };
+    });
+
+    for (let index = 0; index < modifiedData.length; index++) {
+      const element = modifiedData[index];
+
+      if (element.name.indexOf("(") > 0) {
+        element.name = element.name.split("(")[0];
+      }
+
+      if (element.name.indexOf(" and ") > 0) {
+        element.name = element.name.split(" and ")[0];
+      }
+
+      if (element.name.indexOf(",") > 0) {
+        element.name = element.name.split(",")[0];
+      }
+
+      if (element.iso3 === "GBR") {
+        element.name = "United Kingdom";
+      } else if (element.iso3 === "VNM") {
+        element.name = "Vietnam";
+      } else if (element.iso3 === "KOR") {
+        element.name = "South Korea";
+      } else if (element.iso3 === "LAO") {
+        element.name = "Laos";
+      }
+    }
+
+    return modifiedData.sort((a, b) => (a.name > b.name ? 1 : -1));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchLocation = async () => {
+  try {
+    const {
+      data: { country }
+    } = await axios.get("https://ipinfo.io?token=b092506d1e5aeb");
+    return country;
+  } catch (error) {
+    console.log(error);
+  }
 };
