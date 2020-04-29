@@ -1,21 +1,18 @@
-.container {
-  margin: 20px 0;
-  width: 80%;
-}
-
-.card {
-  margin: 3px 2% !important;
-}
-
 .infected {
-  border-bottom: 10px solid rgba(0, 0, 255, 0.5);
+  height: 5px;
+  width: 100%;
+  background-color: blue;
 }
 
 .recovered {
-  border-bottom: 10px solid rgba(0, 255, 0, 0.5);
+  height: 5px;
+  width: 100%;
+  background-color: #32a862;
 }
 .deaths {
-  border-bottom: 10px solid rgba(255, 0, 0, 0.5);
+  height: 5px;
+  width: 100%;
+  background-color: #e30910;
 }
 
 .counter {
@@ -25,17 +22,15 @@
 
 .confirmedDelta {
   margin-left: 10px !important;
-  margin-bottom: 0 !important;
   color: #e30910;
 }
 
 .recoveredDelta {
   margin-left: 10px !important;
-  margin-bottom: 0 !important;
+
   color: #32a862;
 }
 .deathsDelta {
   margin-left: 10px !important;
-  margin-bottom: 0 !important;
   color: #e30910;
 }
