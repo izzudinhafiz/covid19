@@ -38,7 +38,7 @@ const CountryPicker = ({ handleCountryChange }) => {
     const buttonElement = document.getElementById("button-location");
     handleCountryChange(element.target.value);
 
-    if (element.target.value !== "" && buttonElement.innerText !== "GLOBAL") {
+    if (element.target.value !== "") {
       buttonElement.innerText = "Global";
     } else {
       buttonElement.innerText = "My Country";
