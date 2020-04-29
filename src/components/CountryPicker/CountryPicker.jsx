@@ -6,10 +6,12 @@ import styles from "./CountryPicker.module.css";
 
 const CountryPicker = ({ handleCountryChange }) => {
   const [countries, setCountries] = useState([]);
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
     const fetchCountries = async () => {
       setCountries(await fetchCountryData());
+      setLocation(await fetchLocation());
     };
 
     fetchCountries();
@@ -20,8 +22,7 @@ const CountryPicker = ({ handleCountryChange }) => {
     const buttonElement = document.getElementById("button-location");
 
     if (buttonElement.innerText !== "GLOBAL") {
-      const countryClick = await fetchLocation();
-      const index = countries.map((country) => country.iso2).indexOf(countryClick);
+      const index = countries.map((country) => country.iso2).indexOf(location);
       if (index !== -1) {
         selectElement.value = countries[index].iso3;
         buttonElement.innerText = "Global";

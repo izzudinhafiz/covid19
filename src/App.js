@@ -2,7 +2,7 @@ import React from "react";
 
 import { Cards, Chart, CountryPicker } from "./components";
 import styles from "./App.module.css";
-import { fetchTotalData, fetchDailyData, fetchLocation } from "./api";
+import { fetchTotalData, fetchDailyData } from "./api";
 
 class App extends React.Component {
   state = {
@@ -15,7 +15,6 @@ class App extends React.Component {
     const fetchedTotalData = await fetchTotalData();
     const fetchedTimeSeries = await fetchDailyData(this.state.country);
     this.setState({ latestData: fetchedTotalData, timeSeriesData: fetchedTimeSeries });
-    fetchLocation();
   }
 
   handleCountryChange = async (country) => {
