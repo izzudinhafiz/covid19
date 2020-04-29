@@ -49,15 +49,17 @@ class Chart extends React.Component {
         ]
       },
       options: {
+        maintainAspectRatio: this.state.windowWidth <= 500 ? false : true,
         scales: {
           xAxes: [
             {
+              ticks: { fontSize: this.state.windowWidth <= 500 ? 10 : 12 },
               type: "time",
               time: {
                 displayFormats: {
                   day: "MMM DD"
                 },
-                stepSize: 7
+                stepSize: this.state.windowWidth <= 500 ? 14 : 7
               }
             }
           ],
@@ -75,7 +77,7 @@ class Chart extends React.Component {
                     return value;
                   }
                 },
-                fontSize: 12
+                fontSize: this.state.windowWidth <= 500 ? 10 : 12
               }
             }
           ]
@@ -96,9 +98,11 @@ class Chart extends React.Component {
     if (this.state.windowWidth <= 500) {
       this.myChart.options.scales.yAxes[0].ticks.fontSize = 10;
       this.myChart.options.maintainAspectRatio = false;
+      this.myChart.options.scales.xAxes[0].time.stepSize = 14;
     } else {
       this.myChart.options.scales.yAxes[0].ticks.fontSize = 12;
       this.myChart.options.maintainAspectRatio = true;
+      this.myChart.options.scales.xAxes[0].time.stepSize = 7;
     }
     this.myChart.update();
   }
