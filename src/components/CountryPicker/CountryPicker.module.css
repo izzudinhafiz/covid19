@@ -3,6 +3,10 @@
   justify-content: center;
 }
 
+.buttonLocation {
+  width: 120px;
+}
+
 @media only screen and (max-width: 400px) {
   .formControl {
     width: 150px;

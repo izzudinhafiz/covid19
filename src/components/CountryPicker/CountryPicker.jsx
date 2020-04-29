@@ -34,11 +34,28 @@ const CountryPicker = ({ handleCountryChange }) => {
     handleCountryChange(selectElement.value);
   };
 
+  const handleSelect = (element) => {
+    const buttonElement = document.getElementById("button-location");
+    handleCountryChange(element.target.value);
+
+    if (element.target.value !== "" && buttonElement.innerText !== "GLOBAL") {
+      buttonElement.innerText = "Global";
+    } else {
+      buttonElement.innerText = "My Country";
+    }
+  };
+
   return (
     <Grid container spacing={1} className={styles.gridContainer}>
       <Grid item>
         <FormControl className={styles.formControl}>
-          <NativeSelect id="country-select" defaultValue="" onChange={(e) => handleCountryChange(e.target.value)}>
+          <NativeSelect
+            id="country-select"
+            defaultValue=""
+            onChange={(e) => {
+              handleSelect(e);
+            }}
+          >
             <option value="">Global</option>
             {countries
               ? countries.map((country) => (
@@ -51,7 +68,7 @@ const CountryPicker = ({ handleCountryChange }) => {
         </FormControl>
       </Grid>
       <Grid item>
-        <Button id="button-location" variant="contained" size="small" disableElevation color="primary" onClick={handleClick}>
+        <Button id="button-location" variant="contained" size="small" disableElevation color="primary" onClick={handleClick} className={styles.buttonLocation}>
           My Country
         </Button>
       </Grid>
