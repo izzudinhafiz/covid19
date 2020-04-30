@@ -4,7 +4,7 @@ import { Cards, Chart, CountryPicker } from "./components";
 import { fetchTotalData, fetchDailyData } from "./api";
 import { Grid, Typography } from "@material-ui/core";
 
-class AppBody extends React.Component {
+class TimeSeriesBody extends React.Component {
   state = {
     latestData: {},
     timeSeriesData: [],
@@ -43,4 +43,4 @@ class AppBody extends React.Component {
   }
 }
 
-export default AppBody;
+export default TimeSeriesBody;

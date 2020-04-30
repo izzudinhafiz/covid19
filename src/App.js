@@ -1,11 +1,10 @@
 import React from "react";
-import AppBody from "./AppBody";
+import TimeSeriesBody from "./TimeSeriesBody";
+import AnalysisBody from "./AnalysisBody";
 import { NavBar, SideBar } from "./components";
-
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import clsx from "clsx";
-import { makeStyles, useTheme, CssBaseline } from "@material-ui/core";
-
-const drawerWidth = 220;
+import { makeStyles, CssBaseline } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,16 +17,7 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
-    }),
-    marginLeft: -drawerWidth
-  },
-
-  contentShift: {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    marginLeft: 0
+    })
   },
 
   drawerHeader: {
@@ -53,21 +43,21 @@ function App() {
   };
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <NavBar handleOpen={handleDrawerOpen} handleClose={handleDrawerClose} open={open} />
-      <SideBar handleOpen={handleDrawerOpen} handleClose={handleDrawerClose} open={open} />
+    <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <NavBar handleOpen={handleDrawerOpen} handleClose={handleDrawerClose} open={open} />
+        <SideBar handleOpen={handleDrawerOpen} handleClose={handleDrawerClose} open={open} />
 
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open
-        })}
-        onClick={open ? handleDrawerClose : null}
-      >
-        <div className={classes.drawerHeader} />
-        <AppBody />
-      </main>
-    </div>
+        <main className={clsx(classes.content)} onClick={open ? handleDrawerClose : null}>
+          <div className={classes.drawerHeader} />
+          <Switch>
+            <Route path="/covid19" exact component={TimeSeriesBody} />
+            <Route path="/covid19/analysis" component={AnalysisBody} />
+          </Switch>
+        </main>
+      </div>
+    </Router>
   );
 }
 
