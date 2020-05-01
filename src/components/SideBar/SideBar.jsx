@@ -69,6 +69,14 @@ export default function SideBar({ handleClose, open }) {
               <ListItemText>Analysis</ListItemText>
             </ListItem>
           </Link>
+          <Link className={classes.navLink} onClick={handleClose} to="/covid19/sketch">
+            <ListItem button key={"analysis"}>
+              <ListItemIcon>
+                <BubbleChartIcon />
+              </ListItemIcon>
+              <ListItemText>Sketch</ListItemText>
+            </ListItem>
+          </Link>
         </List>
       </Drawer>
     </React.Fragment>

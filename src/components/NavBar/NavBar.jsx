@@ -27,7 +27,7 @@ export default function NavBar({ handleOpen }) {
 
   return (
     <React.Fragment>
-      <AppBar position="fixed" className={clsx(classes.appBar)}>
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton color="inherit" onClick={handleOpen} edge="start" className={clsx(classes.menuButton)}>
             <MenuIcon />
