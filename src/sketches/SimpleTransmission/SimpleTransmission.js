@@ -39,13 +39,9 @@ export default function sketch(p) {
   let people = [];
   let size;
 
-  p.myCustomRedrawAccordingToNewPropsHandler = function (props) {
-    if (props.size !== null) {
-      size = props.size;
-    }
-  };
-
   p.setup = function () {
+    size = Math.floor(Math.min(window.innerWidth * 0.95, window.innerHeight * 0.8));
+    console.log(window.innerHeight, window.innerWidth, size);
     p.createCanvas(size, size, p.WEBGL);
 
     for (let i = 0; i < 100; i++) {
