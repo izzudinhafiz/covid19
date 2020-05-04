@@ -3,7 +3,7 @@ import TimeSeriesBody from "./TimeSeriesBody";
 import AnalysisBody from "./AnalysisBody";
 import SketchBody from "./SketchBody";
 import { NavBar, SideBar } from "./components";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles, CssBaseline } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,12 +39,12 @@ function App() {
         <NavBar handleOpen={handleDrawerOpen} handleClose={handleDrawerClose} open={open} />
         <SideBar handleOpen={handleDrawerOpen} handleClose={handleDrawerClose} open={open} />
 
-        <main style={{ width: "100%" }} onClick={open ? handleDrawerClose : null}>
+        <main style={{ width: "100%", backgroundColor: "rgb(240,240,240)" }} onClick={open ? handleDrawerClose : null}>
           <div className={classes.drawerHeader} />
           <Switch>
-            <Route path="/covid19" exact component={TimeSeriesBody} />
-            <Route path="/covid19/analysis" component={AnalysisBody} />
-            <Route path="/covid19/sketch" component={SketchBody} size={100} />
+            <Route path="/" exact component={TimeSeriesBody} />
+            <Route path="/analysis" component={AnalysisBody} />
+            <Route path="/sketch" component={SketchBody} size={100} />
           </Switch>
         </main>
       </div>

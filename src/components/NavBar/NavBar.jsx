@@ -32,7 +32,7 @@ export default function NavBar({ handleOpen }) {
           <IconButton color="inherit" onClick={handleOpen} edge="start" className={clsx(classes.menuButton)}>
             <MenuIcon />
           </IconButton>
-          <Link className={classes.navLink} to="/covid19">
+          <Link className={classes.navLink} to="/">
             <Typography variant="h6" noWrap>
               COVID-19 Tracker
             </Typography>

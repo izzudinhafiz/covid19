@@ -9,11 +9,12 @@ export default function SimpleTransmission(p) {
   let qtree;
 
   p.disableFriendlyErrors = true;
+
   p.setup = function () {
-    size = Math.floor(Math.min(window.innerWidth * 0.95, window.innerHeight * 0.8));
+    size = Math.floor(Math.min(window.innerWidth * 0.95, 400));
     p.createCanvas(size, size);
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 200; i++) {
       people.push(new Person(p));
     }
     people.push(new Person(p, true));
@@ -21,6 +22,7 @@ export default function SimpleTransmission(p) {
   };
 
   p.draw = function () {
+    p.background(150);
     qtree = new QuadTree(new Rectangle(p.width / 2, p.height / 2, p.width, p), 4, p);
 
     population.healthy.forEach((person) => qtree.insert(person));
@@ -37,7 +39,6 @@ export default function SimpleTransmission(p) {
     });
 
     population.update();
-    p.background(100);
     population.show();
   };
 }

@@ -53,7 +53,7 @@ export default function SideBar({ handleClose, open }) {
         </div>
         <Divider />
         <List>
-          <Link className={classes.navLink} onClick={handleClose} to="/covid19">
+          <Link className={classes.navLink} onClick={handleClose} to="/">
             <ListItem button key={"chart"}>
               <ListItemIcon>
                 <TimelineIcon />
@@ -61,15 +61,15 @@ export default function SideBar({ handleClose, open }) {
               <ListItemText>Timeseries</ListItemText>
             </ListItem>
           </Link>
-          <Link className={classes.navLink} onClick={handleClose} to="/covid19/analysis">
+          <Link className={classes.navLink} onClick={handleClose} to="/analysis">
             <ListItem button key={"analysis"}>
               <ListItemIcon>
                 <BubbleChartIcon />
               </ListItemIcon>
-              <ListItemText>Analysis</ListItemText>
+              <ListItemText>Articles</ListItemText>
             </ListItem>
           </Link>
-          <Link className={classes.navLink} onClick={handleClose} to="/covid19/sketch">
+          <Link className={classes.navLink} onClick={handleClose} to="/sketch">
             <ListItem button key={"analysis"}>
               <ListItemIcon>
                 <BubbleChartIcon />
