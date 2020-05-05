@@ -7,15 +7,14 @@ export default function SimpleTransmission(p) {
   let population;
   let size;
   let qtree;
-  let divElement;
 
   p.disableFriendlyErrors = true;
 
   p.PropsHandler = function (props) {};
 
   p.setup = function () {
-    size = Math.floor(Math.min(p.windowWidth, 400));
-    const ctx = p.createCanvas(size, size);
+    size = Math.floor(Math.min(p.windowWidth * 0.92, 400));
+    p.createCanvas(size, size);
     for (let i = 0; i < 500; i++) {
       people.push(new Person(p));
     }
@@ -42,5 +41,30 @@ export default function SimpleTransmission(p) {
 
     population.update();
     population.show();
+
+    p.push();
+    const xc = Math.floor(p.width * 0.01);
+    const yc = Math.floor(p.height * 0.01);
+    const fontSize = Math.floor(p.height * 0.03);
+    const yOffset = Math.floor(fontSize * 1.3);
+    const xOffset = fontSize * 3;
+    const pointSize = Math.floor(fontSize * 0.75);
+    p.fill(200, 200, 200, 200);
+    p.rect(xc, yc, fontSize * 10, yOffset * 3.5, p.width * 0.01);
+
+    p.fill(0);
+    p.textSize(fontSize);
+    p.text("Susceptible", xc + xOffset, yc + yOffset);
+    p.text("Infectious", xc + xOffset, yc + yOffset * 2);
+    p.text("Recovered", xc + xOffset, yc + yOffset * 3);
+
+    p.strokeWeight(pointSize);
+    p.stroke(255, 255, 255);
+    p.point(xc + xOffset / 2, yc + yOffset - pointSize / 2);
+    p.stroke(255, 0, 0);
+    p.point(xc + xOffset / 2, yc + yOffset * 2 - pointSize / 2);
+    p.stroke(0, 255, 0);
+    p.point(xc + xOffset / 2, yc + yOffset * 3 - pointSize / 2);
+    p.pop();
   };
 }
