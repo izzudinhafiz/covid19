@@ -4,13 +4,13 @@ export class Person {
   constructor(sketch, infected) {
     this.p = sketch;
     this.counter = this.p.random(0, 100);
-    this.pos = this.p.createVector(this.p.random(0, this.p.width), this.p.random(0, this.p.height));
-    this.vel = this.p.createVector(this.p.random(-1, 1), this.p.random(-1, 1));
-    this.radius = Math.floor(this.p.width / 100) / 2;
+    this.radius = this.p.width / 100 / 2;
     this.size = this.radius * 2; //diameter
+    this.pos = this.p.createVector(this.p.random(0, this.p.width), this.p.random(0, this.p.height));
+    this.vel = this.p.createVector(this.p.random(-this.radius, this.radius), this.p.random(-this.radius, this.radius));
     this.maxCounter = 100;
     this.maxRange = this.radius * 8;
-    this.probabilityInfected = 0.05;
+    this.probabilityInfected = 0.01;
     this.infected = infected || false;
     this.infectedCounter = 0;
     this.recovered = false;
@@ -28,7 +28,7 @@ export class Person {
     if (this.infected && this !== other) {
       let distance = this.distSquare(this.pos, other.pos);
       if (distance <= this.maxRange) {
-        if (this.p.random(0, 1) <= this.probabilityInfected / 10) {
+        if (Math.random() <= this.probabilityInfected) {
           other.infect();
         }
       }
@@ -51,9 +51,9 @@ export class Person {
   }
 
   update() {
-    this.vel.x += ((Math.random() - 0.5) * this.radius) / 5;
-    this.vel.y += ((Math.random() - 0.5) * this.radius) / 5;
-    this.vel.limit(this.radius * 0.75);
+    this.vel.x += ((Math.random() * 2 - 1) * this.radius) / 5;
+    this.vel.y += ((Math.random() * 2 - 1) * this.radius) / 5;
+    this.vel.limit(this.radius * 0.5);
     this.edge();
 
     this.pos = this.pos.add(this.vel);

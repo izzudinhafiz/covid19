@@ -19,7 +19,7 @@ export class Population {
 
   show() {
     this.p.push();
-    this.p.strokeWeight(this.people[0].size);
+    this.p.strokeWeight(this.people[0].size <= 3 ? 3 : this.people[0].size);
 
     this.p.stroke(255, 255, 255);
     this.healthy.forEach((person) => this.p.point(person.pos));
@@ -35,7 +35,7 @@ export class Population {
     this.p.noFill();
     this.infected.forEach((person) => {
       // let blipSize = Math.
-      let blipSize = this.p.map(person.counter, 0, person.maxCounter, this.people[0].size, person.maxRange);
+      let blipSize = this.p.map(person.counter, 0, person.maxCounter, 0, person.maxRange);
       this.p.circle(person.pos.x, person.pos.y, blipSize);
     });
 

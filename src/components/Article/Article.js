@@ -45,9 +45,7 @@ export function Article(props) {
             <Typography align="justify" variant="body2" paragraph>
               Based on this model, Susceptible people are
             </Typography>
-            <div id="sketch1">
-              <SketchBody />
-            </div>
+            <SketchBody />)
           </CardContent>
         </Card>
       </Grid>

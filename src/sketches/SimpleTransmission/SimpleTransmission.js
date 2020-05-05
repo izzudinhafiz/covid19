@@ -7,14 +7,16 @@ export default function SimpleTransmission(p) {
   let population;
   let size;
   let qtree;
+  let divElement;
 
   p.disableFriendlyErrors = true;
 
-  p.setup = function () {
-    size = Math.floor(Math.min(window.innerWidth * 0.95, 400));
-    p.createCanvas(size, size);
+  p.PropsHandler = function (props) {};
 
-    for (let i = 0; i < 200; i++) {
+  p.setup = function () {
+    size = Math.floor(Math.min(p.windowWidth, 400));
+    const ctx = p.createCanvas(size, size);
+    for (let i = 0; i < 500; i++) {
       people.push(new Person(p));
     }
     people.push(new Person(p, true));
