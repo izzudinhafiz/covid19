@@ -33,8 +33,8 @@ export default function SimpleTransmission(p) {
   p.setup = function () {
     size = Math.floor(Math.min(p.windowWidth * 0.92, 400));
 
-    console.log(data);
     p.createCanvas(size, size);
+    p.randomSeed(99);
     for (let i = 1; i < 500; i++) {
       people.push(new Person(p));
     }
@@ -47,6 +47,7 @@ export default function SimpleTransmission(p) {
 
   p.draw = function () {
     p.background(0);
+
     qtree = new QuadTree(new Rectangle(p.width / 2, p.height / 2, p.width, p), 4, p);
 
     population.healthy.forEach((person) => qtree.insert(person));
@@ -91,5 +92,9 @@ export default function SimpleTransmission(p) {
     p.stroke(0, 255, 0);
     p.point(xc + xOffset / 2, yc + yOffset * 3 - pointSize / 2);
     p.pop();
+
+    // if (p.frameCount % 20 === 0) {
+    //   updateData(population);
+    // }
   };
 }
