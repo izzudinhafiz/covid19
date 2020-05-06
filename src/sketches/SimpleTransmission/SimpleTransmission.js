@@ -7,23 +7,46 @@ export default function SimpleTransmission(p) {
   let population;
   let size;
   let qtree;
+  let data;
+  let updateState;
 
   p.disableFriendlyErrors = true;
 
-  p.PropsHandler = function (props) {};
+  function updateData(population) {
+    if (data) {
+      updateState([
+        ...data,
+        {
+          healthy: population.healthy.length,
+          infected: population.infected.length,
+          recovered: population.recovered.length
+        }
+      ]);
+    }
+  }
+
+  p.PropsHandler = function (props) {
+    data = props.data;
+    updateState = props.updateData;
+  };
 
   p.setup = function () {
     size = Math.floor(Math.min(p.windowWidth * 0.92, 400));
+
+    console.log(data);
     p.createCanvas(size, size);
-    for (let i = 0; i < 500; i++) {
+    for (let i = 1; i < 500; i++) {
       people.push(new Person(p));
     }
     people.push(new Person(p, true));
     population = new Population(people, p);
+    population.updateCount();
+
+    updateData(population);
   };
 
   p.draw = function () {
-    p.background(150);
+    p.background(0);
     qtree = new QuadTree(new Rectangle(p.width / 2, p.height / 2, p.width, p), 4, p);
 
     population.healthy.forEach((person) => qtree.insert(person));
@@ -39,7 +62,9 @@ export default function SimpleTransmission(p) {
       }
     });
 
-    population.update();
+    population.updatePeople();
+    population.updateCount();
+    updateData(population);
     population.show();
 
     p.push();

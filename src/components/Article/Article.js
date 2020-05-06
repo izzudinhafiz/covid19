@@ -45,7 +45,7 @@ export function Article(props) {
             <Typography align="justify" variant="body2" paragraph>
               The SIR models has three interactions. (1) Susceptible people interact with infectious people and have a chance to contract the disease. (2)
               Infectious people will slowly recover, the rate at which they recover is dependant on the level of medical care available. Lastly (3) Recovered
-              people can no longer transmit the disease because they have gain immunity against the disease.
+              people can no longer transmit the disease because they have gained immunity against the disease.
             </Typography>
             <Typography align="justify" variant="body2" paragraph>
               Below we have a simple simulation of a disease spreading in a population with no mitigating factors at all. We can see how quickly the disease

@@ -7,11 +7,13 @@ export class Population {
     this.recovered = this.people.filter((person) => person.recovered);
   }
 
-  update() {
+  updatePeople() {
     this.people.forEach((person) => {
       person.update();
     });
+  }
 
+  updateCount() {
     this.infected = this.people.filter((person) => person.infected);
     this.healthy = this.people.filter((person) => !person.infected && !person.recovered);
     this.recovered = this.people.filter((person) => person.recovered);
