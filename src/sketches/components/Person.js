@@ -1,4 +1,4 @@
-const incubationPeriod = 1000;
+const incubationPeriod = 500;
 
 export class Person {
   constructor(sketch, infected) {
@@ -10,7 +10,7 @@ export class Person {
     this.vel = this.p.createVector(this.p.random(-this.radius, this.radius), this.p.random(-this.radius, this.radius));
     this.maxCounter = 100;
     this.maxRange = this.radius * 8;
-    this.probabilityInfected = 0.01;
+    this.probabilityInfected = 0.2;
     this.infected = infected || false;
     this.infectedCounter = 0;
     this.recovered = false;

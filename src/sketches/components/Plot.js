@@ -18,33 +18,10 @@ class linePlot {
       modifiedData.push([]);
     }
 
-    const blockSize = Math.floor(data.length / 100);
+    const stepSize = data.length / 100;
 
-    let index = 0;
-    let blockIndex = 0;
-
-    if (blockSize > 0) {
-      while (index < data.length) {
-        let counter = 0;
-        for (let i = 0; i < blockSize; i++) {
-          if (index === data.length) {
-            break;
-          }
-
-          modifiedData[blockIndex] = Number(modifiedData[blockIndex]) + Number(data[index]);
-          index++;
-          counter++;
-        }
-        modifiedData[blockIndex] = modifiedData[blockIndex] / counter;
-
-        blockIndex++;
-      }
-    } else {
-      modifiedData = data;
-    }
-
-    if (color === "green") {
-      console.log(modifiedData);
+    for (let i = 0; i < modifiedData.length; i++) {
+      modifiedData[i] = data[Math.floor(i * stepSize)];
     }
 
     p.push();
@@ -61,7 +38,7 @@ class linePlot {
       p.stroke(0, 255, 0);
     }
 
-    modifiedData = modifiedData.filter((x) => x);
+    // modifiedData = modifiedData.filter((x) => x);
     for (let i = 0; i < modifiedData.length - 1; i++) {
       y1 = (modifiedData[i] / maxCount) * (this.plotHeight * 0.9);
       y2 = (modifiedData[i + 1] / maxCount) * (this.plotHeight * 0.9);
@@ -112,5 +89,9 @@ export default function Plot(p) {
     plot.show();
     plot.plot(healthy, 500, "white");
     plot.plot(infected, 500, "red");
+
+    if (infected[infected.length - 1] === 0) {
+      p.noLoop();
+    }
   };
 }

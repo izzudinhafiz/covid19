@@ -34,7 +34,7 @@ export default function SimpleTransmission(p) {
     size = Math.floor(Math.min(p.windowWidth * 0.92, 400));
 
     p.createCanvas(size, size);
-    p.randomSeed(99);
+    p.randomSeed(92);
     for (let i = 1; i < 500; i++) {
       people.push(new Person(p));
     }
