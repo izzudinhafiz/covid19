@@ -1,3 +1,5 @@
+import { Recovered, Infected, Healthy } from "./Color";
+
 export class Population {
   constructor(people, sketch) {
     this.p = sketch;
@@ -23,17 +25,17 @@ export class Population {
     this.p.push();
     this.p.strokeWeight(this.people[0].size <= 3 ? 3 : this.people[0].size);
 
-    this.p.stroke(255, 255, 255);
+    this.p.stroke(Healthy.r, Healthy.g, Healthy.b);
     this.healthy.forEach((person) => this.p.point(person.pos));
 
-    this.p.stroke(0, 255, 0);
+    this.p.stroke(Recovered.r, Recovered.g, Recovered.b);
     this.recovered.forEach((person) => this.p.point(person.pos));
 
-    this.p.stroke(255, 0, 0);
+    this.p.stroke(Infected.r, Infected.g, Infected.b);
     this.infected.forEach((person) => this.p.point(person.pos));
 
     this.p.strokeWeight(1);
-    this.p.stroke(255, 0, 0);
+    this.p.stroke(Infected.r, Infected.g, Infected.b);
     this.p.noFill();
     this.infected.forEach((person) => {
       // let blipSize = Math.

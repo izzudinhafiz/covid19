@@ -1,6 +1,7 @@
 import { Rectangle, QuadTree } from "../components/QuadTree";
 import { Person } from "../components/Person";
 import { Population } from "../components/Population";
+import { Recovered, Infected, Healthy } from "../components/Color";
 
 export default function SimpleTransmission(p) {
   let people = [];
@@ -46,7 +47,10 @@ export default function SimpleTransmission(p) {
   };
 
   p.draw = function () {
-    p.background(0);
+    p.background(255);
+    p.stroke(0);
+    p.strokeWeight(1);
+    p.rect(0, 0, p.width, p.height);
 
     qtree = new QuadTree(new Rectangle(p.width / 2, p.height / 2, p.width, p), 4, p);
 
@@ -79,17 +83,18 @@ export default function SimpleTransmission(p) {
     p.rect(xc, yc, fontSize * 10, yOffset * 3.5, p.width * 0.01);
 
     p.fill(0);
+    p.strokeWeight(0.4);
     p.textSize(fontSize);
     p.text("Susceptible", xc + xOffset, yc + yOffset);
     p.text("Infectious", xc + xOffset, yc + yOffset * 2);
     p.text("Recovered", xc + xOffset, yc + yOffset * 3);
 
     p.strokeWeight(pointSize);
-    p.stroke(255, 255, 255);
+    p.stroke(Healthy.r, Healthy.g, Healthy.b);
     p.point(xc + xOffset / 2, yc + yOffset - pointSize / 2);
-    p.stroke(255, 0, 0);
+    p.stroke(Infected.r, Infected.g, Infected.b);
     p.point(xc + xOffset / 2, yc + yOffset * 2 - pointSize / 2);
-    p.stroke(0, 255, 0);
+    p.stroke(Recovered.r, Recovered.g, Recovered.b);
     p.point(xc + xOffset / 2, yc + yOffset * 3 - pointSize / 2);
     p.pop();
 

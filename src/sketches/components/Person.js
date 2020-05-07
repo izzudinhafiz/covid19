@@ -75,17 +75,17 @@ export class Person {
     this.p.push();
     this.p.strokeWeight(this.size / 2);
     if (!this.infected) {
-      this.p.stroke(255, 255, 255, 200);
+      this.p.stroke(93, 183, 164);
     } else if (this.infected) {
-      this.p.stroke(255, 0, 0, 200);
+      this.p.stroke(193, 54, 63);
     } else if (this.recovered) {
-      this.p.stroke(0, 255, 0, 200);
+      this.p.stroke(153, 210, 140);
     }
     this.p.point(this.pos);
     this.p.pop();
 
     if (this.infected) {
-      this.p.stroke(255, 0, 0, 150);
+      this.p.stroke(193, 54, 63);
       this.p.noFill();
       let blipSize = this.p.map(this.counter, 0, this.maxCounter, 0, this.maxRange);
       this.p.ellipse(this.pos.x, this.pos.y, blipSize);
