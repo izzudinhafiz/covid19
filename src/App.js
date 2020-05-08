@@ -1,7 +1,7 @@
 import React from "react";
 import TimeSeriesBody from "./TimeSeriesBody";
 import AnalysisBody from "./AnalysisBody";
-import SketchBody from "./SketchBody";
+import Sketch from "./Sketch";
 import { NavBar, SideBar } from "./components";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles, CssBaseline } from "@material-ui/core";
@@ -44,7 +44,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={TimeSeriesBody} />
             <Route path="/analysis" component={AnalysisBody} />
-            <Route path="/sketch" component={SketchBody} size={100} />
+            <Route path="/sketch" component={Sketch} size={100} />
           </Switch>
         </main>
       </div>

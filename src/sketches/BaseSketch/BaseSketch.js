@@ -68,10 +68,12 @@ export default function SimpleTransmission(p) {
         });
       }
     });
-
     population.updatePeople();
-    population.updateCount();
-    updateData(population);
+
+    if (population.infected > 0) {
+      population.updateCount();
+      updateData(population);
+    }
     population.show();
 
     p.push();

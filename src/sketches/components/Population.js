@@ -11,7 +11,8 @@ export class Population {
 
   updatePeople() {
     this.people.forEach((person) => {
-      person.update();
+      person.updateVelocity();
+      person.updateState();
     });
   }
 

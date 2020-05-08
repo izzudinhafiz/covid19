@@ -1,17 +1,9 @@
 import React from "react";
 import { Grid, Divider, Typography, Card, CardContent } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import SketchBody from "../../SketchBody";
-
-const useStyles = makeStyles((theme) => ({
-  sketchMobile: {
-    width: "100%"
-  }
-}));
+import SimpleTransmission from "../../sketches/SimpleTransmission/SimpleTransmission";
 
 export function Article(props) {
-  const classes = useStyles();
-
   return (
     <React.Fragment>
       <Grid item xs={12} md={7}>
@@ -51,7 +43,7 @@ export function Article(props) {
               Below we have a simple simulation of a disease spreading in a population with no mitigating factors at all. We can see how quickly the disease
               spreads to the whole population.
             </Typography>
-            <SketchBody />
+            <SketchBody sketch={SimpleTransmission} />
           </CardContent>
         </Card>
       </Grid>

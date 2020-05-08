@@ -1,125 +1,164 @@
-const incubationPeriod = 1000;
+import { Rectangle, QuadTree } from "../components/QuadTree";
+import { Person } from "../components/Person";
+import { Population } from "../components/Population";
+import { Recovered, Infected, Healthy } from "../components/Color";
 
-class Person {
-  constructor(sketch, infected) {
-    this.p = sketch;
-    this.counter = this.p.random(0, 100);
-    this.pos = this.p.createVector(this.p.random(0, this.p.width), this.p.random(0, this.p.height));
-    this.vel = this.p.createVector(this.p.random(-1, 1), this.p.random(-1, 1));
-    this.radius = Math.floor(this.p.width / 100) / 2;
-    this.size = this.radius * 2; //diameter
-    this.maxCounter = 100;
-    this.maxRange = this.radius * 8;
-    this.probabilityInfected = 0.05;
-    this.infected = infected || false;
-    this.infectedCounter = 0;
-    this.recovered = false;
+class DistancingPerson extends Person {
+  constructor(sketch, infected, range, probability) {
+    super(sketch, infected, range, probability);
+    this.distancingFlag = false;
+    this.deltaVel = this.p.createVector();
+    this.seperationRange = this.size * 5.5;
   }
 
-  edge() {
-    if (this.pos.x <= 0 || this.pos.x >= this.p.width) {
-      this.vel.x *= -1;
-    } else if (this.pos.y <= 0 || this.pos.y >= this.p.height) {
-      this.vel.y *= -1;
-    }
-  }
-
-  isClose(other) {
-    if (this.infected && this !== other) {
-      let distance = this.distSquare(this.pos, other.pos);
-      if (distance <= this.maxRange) {
-        if (this.p.random(0, 1) <= this.probabilityInfected / 10) {
-          other.infect();
+  seperation(agents) {
+    let neighbourCount = 0;
+    let velocity = this.p.createVector(0, 0);
+    if (agents) {
+      agents.forEach((agent) => {
+        if (this.isClose(agent)) {
+          velocity.x += agent.pos.x - this.pos.x;
+          velocity.y += agent.pos.y - this.pos.y;
+          neighbourCount++;
         }
-      }
-    }
-  }
-
-  infect() {
-    if (!this.recovered) {
-      this.infected = true;
+      });
     }
 
-    return this.infected;
+    if (neighbourCount !== 0) {
+      velocity.x /= neighbourCount;
+      velocity.y /= neighbourCount;
+    }
+
+    velocity.x *= -1;
+    velocity.y *= -1;
+    velocity = velocity.normalize();
+
+    this.deltaVel = velocity.mult(2);
   }
 
-  distSquare(a, b) {
-    let deltaX = a.x - b.x;
-    let deltaY = a.y - b.y;
+  updateVelocity() {
+    if (this.distancingFlag) {
+      this.vel.x += this.deltaVel.x;
+      this.vel.y += this.deltaVel.y;
+    } else {
+      this.vel.x += ((Math.random() * 2 - 1) * this.radius) / 5;
+      this.vel.y += ((Math.random() * 2 - 1) * this.radius) / 5;
+    }
 
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  }
-
-  update() {
-    this.vel.x += this.p.random(-this.radius / 5, this.radius / 5);
-    this.vel.y += this.p.random(-this.radius / 5, this.radius / 5);
-    this.vel.limit(this.radius * 0.75);
-    this.pos = this.pos.add(this.vel);
+    this.vel.limit(this.radius * 0.5);
 
     this.edge();
-
-    this.counter += 1;
-    if (this.counter >= this.maxCounter) {
-      this.counter = 0;
-    }
-    if (this.infected) {
-      this.infectedCounter += 1;
-      if (this.infectedCounter >= incubationPeriod) {
-        this.infected = false;
-        this.recovered = true;
-      }
-    }
-  }
-
-  draw() {
-    this.p.noStroke();
-    if (!this.infected) {
-      this.p.fill(255, 255, 255, 200);
-    } else {
-      this.p.fill(255, 0, 0, 200);
-    }
-    this.p.ellipse(this.pos.x, this.pos.y, this.size);
-
-    if (this.infected) {
-      this.p.stroke(255, 0, 0, 150);
-      this.p.noFill();
-      let blipSize = this.p.map(this.counter, 0, this.maxCounter, 0, this.maxRange);
-      this.p.ellipse(this.pos.x, this.pos.y, blipSize);
-    }
-
-    if (this.recovered) {
-      this.p.noStroke();
-      this.p.fill(0, 255, 0, 200);
-      this.p.ellipse(this.pos.x, this.pos.y, this.size);
-    }
   }
 }
 
 export default function SocialDistancing(p) {
   let people = [];
+  let population;
   let size;
+  let qtree;
+  let data;
+  let updateState;
+
+  p.disableFriendlyErrors = true;
+
+  function updateData(population) {
+    if (data) {
+      updateState([
+        ...data,
+        {
+          healthy: population.healthy.length,
+          infected: population.infected.length,
+          recovered: population.recovered.length
+        }
+      ]);
+    }
+  }
+
+  p.PropsHandler = function (props) {
+    data = props.data;
+    updateState = props.updateData;
+  };
 
   p.setup = function () {
-    size = Math.floor(Math.min(window.innerWidth * 0.95, window.innerHeight * 0.8));
+    size = Math.floor(Math.min(p.windowWidth * 0.92, 400));
     p.createCanvas(size, size);
-
-    for (let i = 0; i < 200; i++) {
-      people.push(new Person(p));
+    p.randomSeed(92);
+    for (let i = 1; i < 500; i++) {
+      people.push(new DistancingPerson(p, false));
     }
+    people.push(new DistancingPerson(p, true));
+    population = new Population(people, p);
+    population.updateCount();
 
-    people.push(new Person(p, true));
+    updateData(population);
   };
 
   p.draw = function () {
-    p.background(100);
-    p.translate(-p.width / 2, -p.height / 2);
-    p.text(p.frameRate(), 10, 30);
-    people.forEach((x) => {
-      x.update();
-      x.draw();
-      people.forEach((y) => {
-        x.isClose(y);
-      });
+    p.background(255);
+    p.stroke(0);
+    p.strokeWeight(1);
+    p.noFill();
+    p.rect(0, 0, p.width, p.height);
+
+    qtree = new QuadTree(new Rectangle(p.width / 2, p.height / 2, p.width, p), 4, p);
+
+    population.people.forEach((person) => qtree.insert(person));
+
+    population.people.forEach((person) => {
+      if (!person.distancingFlag && population.infected.length >= 50) {
+        person.distancingFlag = true;
+        // person.probabilityInfected = 0;
+      } else if (person.distancingFlag && population.infected.length <= 10) {
+        person.distancingFlag = false;
+      }
+      let boundingBox = new Rectangle(person.pos.x, person.pos.y, person.seperationRange, p);
+      let neighbours = qtree.query(boundingBox);
+      person.seperation(neighbours);
+
+      boundingBox = new Rectangle(person.pos.x, person.pos.y, person.maxRange, p);
+      neighbours = qtree.query(boundingBox);
+
+      if (person.infected) {
+        if (neighbours.length !== 0) {
+          neighbours.forEach((neighbour) => {
+            if (person.isClose(neighbour)) {
+              neighbour.infect();
+            }
+          });
+        }
+      }
     });
+
+    population.updatePeople();
+
+    population.updateCount();
+    updateData(population);
+    population.show();
+
+    p.push();
+    const xc = Math.floor(p.width * 0.01);
+    const yc = Math.floor(p.height * 0.01);
+    const fontSize = Math.floor(p.height * 0.03);
+    const yOffset = Math.floor(fontSize * 1.3);
+    const xOffset = fontSize * 3;
+    const pointSize = Math.floor(fontSize * 0.75);
+    p.fill(200, 200, 200, 200);
+    p.rect(xc, yc, fontSize * 10, yOffset * 3.5, p.width * 0.01);
+
+    p.fill(0);
+    p.strokeWeight(0.4);
+    p.textSize(fontSize);
+    p.text("Susceptible", xc + xOffset, yc + yOffset);
+    p.text("Infectious", xc + xOffset, yc + yOffset * 2);
+    p.text("Recovered", xc + xOffset, yc + yOffset * 3);
+
+    p.strokeWeight(pointSize);
+    p.stroke(Healthy.r, Healthy.g, Healthy.b);
+    p.point(xc + xOffset / 2, yc + yOffset - pointSize / 2);
+    p.stroke(Infected.r, Infected.g, Infected.b);
+    p.point(xc + xOffset / 2, yc + yOffset * 2 - pointSize / 2);
+    p.stroke(Recovered.r, Recovered.g, Recovered.b);
+    p.point(xc + xOffset / 2, yc + yOffset * 3 - pointSize / 2);
+    p.pop();
   };
 }
