@@ -1,4 +1,4 @@
-import { Rectangle, QuadTree } from "../components/QuadTree";
+import { Rectangle, QuadTree, Circle } from "../components/QuadTree";
 import { Person } from "../components/Person";
 import { Population } from "../components/Population";
 import { Recovered, Infected, Healthy } from "../components/Color";
@@ -37,18 +37,20 @@ export default function SimpleTransmission(p) {
     p.createCanvas(size, size);
     p.randomSeed(92);
     for (let i = 1; i < 500; i++) {
-      people.push(new Person(p));
+      people.push(new Person(p, false));
     }
     people.push(new Person(p, true));
     population = new Population(people, p);
     population.updateCount();
 
     updateData(population);
+    console.log(population.people[0].maxRange);
   };
 
   p.draw = function () {
     p.background(255);
     p.stroke(0);
+    p.noFill();
     p.strokeWeight(1);
     p.rect(0, 0, p.width, p.height);
 
@@ -57,14 +59,12 @@ export default function SimpleTransmission(p) {
     population.healthy.forEach((person) => qtree.insert(person));
 
     population.infected.forEach((person) => {
-      let boundingBox = new Rectangle(person.pos.x, person.pos.y, person.maxRange, p);
+      let boundingBox = new Circle(person.pos.x, person.pos.y, person.maxRange, p);
       let neighbours = qtree.query(boundingBox);
 
       if (neighbours.length !== 0) {
         neighbours.forEach((neighbour) => {
-          if (person.isClose(neighbour)) {
-            neighbour.infect();
-          }
+          person.infect(neighbour);
         });
       }
     });
@@ -99,9 +99,5 @@ export default function SimpleTransmission(p) {
     p.stroke(Recovered.r, Recovered.g, Recovered.b);
     p.point(xc + xOffset / 2, yc + yOffset * 3 - pointSize / 2);
     p.pop();
-
-    // if (p.frameCount % 20 === 0) {
-    //   updateData(population);
-    // }
   };
 }

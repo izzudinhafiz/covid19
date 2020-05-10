@@ -1,3 +1,43 @@
+export class Circle {
+  constructor(x, y, diameter, sketch) {
+    this.p = sketch;
+    this.pos = this.p.createVector(x, y);
+    this.radius = diameter / 2;
+    this.diameter = diameter;
+  }
+
+  contains(point) {
+    return Math.sqrt((point.pos.x - this.pos.x) ** 2 + (point.pos.y - this.pos.y) ** 2) <= this.radius;
+  }
+
+  intersects(other) {
+    if (other instanceof Rectangle) {
+      let distanceX = Math.abs(this.pos.x - other.pos.x);
+      let distanceY = Math.abs(this.pos.y - other.pos.y);
+
+      if (distanceX > other.width / 2 + this.radius) return false;
+      if (distanceY > other.height / 2 + this.radius) return false;
+
+      if (distanceX < other.width / 2) return true;
+      if (distanceY < other.height / 2) return true;
+
+      return (distanceX - other.width / 2) ** 2 + (distanceY - other.height / 2) ** 2 <= this.radius ** 2;
+    } else if (other instanceof Circle) {
+      let distance = Math.sqrt((other.pos.x - this.pos.x) ** 2 + (other.pos.y - this.pos.y) ** 2);
+
+      return distance <= other.radius + this.radius;
+    }
+  }
+
+  show() {
+    this.p.push();
+    this.p.noFill();
+    this.p.stroke(255);
+    this.p.circle(this.pos.x, this.pos.y, this.diameter);
+    this.p.pop();
+  }
+}
+
 export class Rectangle {
   constructor(x, y, width, sketch) {
     this.p = sketch;
@@ -15,10 +55,23 @@ export class Rectangle {
   }
 
   intersects(other) {
-    //If any Rectangle is completely to the left of the other
-    if (this.x1 >= other.x2 || other.x1 >= this.x2) return false;
-    //If any Rectangle is completely above the other
-    if (this.y1 >= other.y2 || other.y1 >= this.y2) return false;
+    if (other instanceof Rectangle) {
+      //If any Rectangle is completely to the left of the other
+      if (this.x1 >= other.x2 || other.x1 >= this.x2) return false;
+      //If any Rectangle is completely above the other
+      if (this.y1 >= other.y2 || other.y1 >= this.y2) return false;
+    } else if (other instanceof Circle) {
+      let distanceX = Math.abs(this.pos.x - other.pos.x);
+      let distanceY = Math.abs(this.pos.y - other.pos.y);
+
+      if (distanceX > this.width / 2 + other.radius) return false;
+      if (distanceY > this.height / 2 + other.radius) return false;
+
+      if (distanceX < this.width / 2) return true;
+      if (distanceY < this.height / 2) return true;
+
+      return (distanceX - this.width / 2) ** 2 + (distanceY - this.height / 2) ** 2 <= other.radius ** 2;
+    }
 
     return true;
   }

@@ -1,4 +1,4 @@
-import { Rectangle, QuadTree } from "../components/QuadTree";
+import { Rectangle, QuadTree, Circle } from "../components/QuadTree";
 import { Person } from "../components/Person";
 import { Population } from "../components/Population";
 import { Recovered, Infected, Healthy } from "../components/Color";
@@ -33,20 +33,18 @@ class DistancingPerson extends Person {
     velocity.y *= -1;
     velocity = velocity.normalize();
 
-    this.deltaVel = velocity.mult(2);
+    this.deltaVel = velocity;
   }
 
   updateVelocity() {
     if (this.distancingFlag) {
       this.vel.x += this.deltaVel.x;
       this.vel.y += this.deltaVel.y;
+      // this.vel.normalize();
+      this.vel.limit(this.radius * 0.5);
     } else {
-      this.vel.x += ((Math.random() * 2 - 1) * this.radius) / 5;
-      this.vel.y += ((Math.random() * 2 - 1) * this.radius) / 5;
+      this.vel.rotate(this.p.radians(this.p.random(-10, 10)));
     }
-
-    this.vel.limit(this.radius * 0.5);
-
     this.edge();
   }
 }
@@ -105,25 +103,24 @@ export default function SocialDistancing(p) {
     population.people.forEach((person) => qtree.insert(person));
 
     population.people.forEach((person) => {
-      if (!person.distancingFlag && population.infected.length >= 50) {
+      if (!person.distancingFlag && population.infected.length >= 200) {
         person.distancingFlag = true;
-        // person.probabilityInfected = 0;
-      } else if (person.distancingFlag && population.infected.length <= 10) {
+      } else if (person.distancingFlag && population.infected.length <= 0) {
         person.distancingFlag = false;
+        person.vel = p.createVector(p.random(-person.radius, person.radius), p.random(-person.radius, person.radius));
+        person.vel.mult(0.4);
       }
-      let boundingBox = new Rectangle(person.pos.x, person.pos.y, person.seperationRange, p);
+      let boundingBox = new Circle(person.pos.x, person.pos.y, person.seperationRange, p);
       let neighbours = qtree.query(boundingBox);
       person.seperation(neighbours);
 
-      boundingBox = new Rectangle(person.pos.x, person.pos.y, person.maxRange, p);
+      boundingBox = new Circle(person.pos.x, person.pos.y, person.maxRange, p);
       neighbours = qtree.query(boundingBox);
 
       if (person.infected) {
         if (neighbours.length !== 0) {
           neighbours.forEach((neighbour) => {
-            if (person.isClose(neighbour)) {
-              neighbour.infect();
-            }
+            person.infect(neighbour);
           });
         }
       }
